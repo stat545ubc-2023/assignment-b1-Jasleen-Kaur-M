@@ -9,11 +9,26 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r, include = FALSE, message = FALSE}
+```{r, message = FALSE}
 library(tidyverse)
 library(ggplot2)
 library(testthat)
 ```
 
+Before we create a function, we need a dataset. For this project we will work with the `cancer_sample` dataset from `datateachr` package, since we explored the dataset previously.
+
+First we load the `cancer_sample` dataset by loading the `datateachr` package as follows:
+
+```{r, message = FALSE}
+library(datateachr)
+```
+
+Now before we begin with the main task, lets quickly explore the dataset, to understand it. We will use some basic `dplyr` functions to understand and explore the dataset.
+
+```{r}
+cancer_sample %>% 
+  glimpse()
+```
+Now, while the `glimpse` function showed that there are 562 rows and 32 columns, we are not interested with working with all the columns. So we shall select a few to work with. 
 
 
