@@ -1,0 +1,19 @@
+---
+title: "Assignment B1"
+author: "Jasleen Kaur"
+date: "2023-11-01"
+output: github_document
+---
+
+```{r setup, include=FALSE, message = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include = FALSE, message = FALSE}
+library(tidyverse)
+library(ggplot2)
+library(testthat)
+```
+
+
+
