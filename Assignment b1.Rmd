@@ -11,8 +11,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r, message = FALSE}
 library(tidyverse)
-library(ggplot2)
 library(testthat)
+library(roxygen2)
 ```
 
 Before we create a function, we need a dataset. For this project we will work with the `cancer_sample` dataset from `datateachr` package, since we explored the dataset previously.
@@ -29,6 +29,116 @@ Now before we begin with the main task, lets quickly explore the dataset, to und
 cancer_sample %>% 
   glimpse()
 ```
-Now, while the `glimpse` function showed that there are 562 rows and 32 columns, we are not interested with working with all the columns. So we shall select a few to work with. 
+Now, while the `glimpse` function showed that there are 562 rows and 32 columns, we are not interested with working with all the columns together. So we shall narrow down to the columns or variables we are interested in, and we shall try to establish a function. This function can be used with other cells of these variables to determine the relation or perform the function or action.
+
+So let's break down the above explanation first. Let's think of a task we would like to perform with this dataset. One of the task we performed previously in the `MDA project 2` was visualizing the data using a histogram. Therefore, our aim is to create a histogram function that will help us analyze the distribution of the data under study.
 
 
+First, we begin by making sure that the input variables used in this function follow a certain set rules. For example we make sure that the data being used is a `dataframe`, the input columns used to execute our function are numerical, etc. We need to make sure that the function runs smoothly but also takes in correct input and to compute the output.
+
+We also include the `Roxygen2` documentation to make things easier to understand.
+
+```{r}
+#' Create a Histogram
+#'
+#' This function generates a histogram for a numeric variable in a given data frame.
+#'
+#' @param data A data frame containing the dataset.
+#' @param var The name of the numeric variable to create a histogram for.
+#' @param bins The number of bins for the histogram (default is 10).
+#' @param col The color of the histogram bars (default is "blue").
+#'
+#'
+#' @examples
+#' data <- data.frame(x = rnorm(100))
+#' hist1 <- histogram(data, var = "x", bins = 20, col = "green")
+#' print(hist1)
+#'
+#'
+#' @export
+histogram <- function(data, var, bins = 10, col = "lightpink") {
+  # check if the data is a data frame
+  if (!is.data.frame(data)) {
+    stop("The input must be a data frame.")
+  }
+  # check if the variable is a character string
+  if (!is.character(var)) {
+    stop("The variable must be a character string.")
+  }
+  # check if the variable exists in the data
+  if (!var %in% names(data)) {
+    stop("The variable does not exist in the data.")
+  }
+  # check if the variable is numeric
+  if (!is.numeric(data[[var]])) {
+    stop("The variable must be numeric.")
+  }
+   #plot a histogram of the variable
+   hist(data[[var]], breaks = bins, col = col, main = paste("Histogram of", var), xlab = var)
+}
+  
+```
+
+
+Now let's check our function! We need to make sure our function runs smoothly. Also this could serve as example on how to use the function we created.
+
+```{r}
+# Install datateachr package if not already installed
+if (!require(datateachr)) {
+  install.packages("datateachr")
+}
+
+# Load the library
+library(datateachr)
+
+# Load the data
+data <- cancer_sample
+```
+
+
+```{r}
+# Create a histogram with the default arguments
+hist1 <- histogram(data, var = "area_worst")
+print(hist1)
+
+```
+``` {r}
+# Create a histogram with different arguments
+hist2 <- histogram(data, var = "concavity_worst", bins = 15, col = "lightblue")
+
+print(hist2)
+```
+``` {r, error = TRUE}
+# Try to create a histogram with an invalid argument
+hist3 <- histogram(data, var = "diagnosis")
+```
+
+```{r}
+library(testthat)
+
+# Test 1: Provide a valid input and check if it returns a ggplot object
+test_that("histogram function works as expected with valid input", {
+  data <- data.frame(x = rnorm(100))
+  var <- "x"
+  hist1 <- histogram(data, var = var, bins = 20, col = "lightpink")
+  expect_is(hist1, "histogram", info = "Should return a histogram object")
+})
+
+# Test 2: Check if the function raises an error for invalid input
+test_that("histogram function raises an error for an invalid input", {
+  data <- data.frame(y = "text")
+  var <- "y"
+  expect_error(histogram(data, var = var), "The variable must be numeric")
+})
+
+
+# Test 3: Provide an invalid input and check if it throws an error
+test_that("histogram function throws an error for an invalid input", {
+  data <- data.frame(z = "notnumeric")
+  var <- "z"
+  expect_error(histogram(data, var = var), "The variable must be numeric", 
+    info = "Should throw an error for an invalid input")
+})
+
+
+```
