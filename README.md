@@ -24,6 +24,8 @@ If you've landed here, you're ready to dive into the initial R journey. Here's w
 2. The Rmd file: Where my code for the entire assignment exists with detailed instructions.
 3. The md file: This is the knit document for you of my rmd file. Feel free to go through and look at the outputs.
 
+This repository also contains some other supported files with R such as the R.proj and DS_Store files, etc
+
 ## Conclusion 📝
 
 This project showcases the use of R programming as tool for creating a function that can be used for quick analysis and modeling, with a focus on `cancer_sample` dataset from the `datateachr` package. The output can be tested using the `test_that` package.
